@@ -1,17 +1,18 @@
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import TxtUploadForm from './TxtUploadForm'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import UploadContentForm from "./UploadContentForm"
 
-const TxtUploadFormCard = ({ topics }) => {
+
+const UploadContentCard = ({ topics }) => {
     return (
         <Card className="h-full ">
             <CardHeader>
                 <CardTitle className="text-base">Tartalom feltöltés</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 h-full">
-                <TxtUploadForm topics={topics} />
+                <UploadContentForm topics={topics} />
             </CardContent>
         </Card>
     )
 }
 
-export default TxtUploadFormCard
+export default UploadContentCard

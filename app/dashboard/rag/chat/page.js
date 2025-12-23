@@ -1,22 +1,24 @@
+import { getEmbeddedTree } from '@/action/topic'
+import { getMyTokenInfoAction } from '@/action/user'
 import RagChatPanel from '@/components/chat/RagChatPanel'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { getAllTopicAction } from '@/lib/actions/topics'
 import React from 'react'
 
 const RagChatPage = async () => {
 
-    const { topics } = await getAllTopicAction()
+    const { topics, subTopics, chunks } = await getEmbeddedTree()
 
-    // lekérjük a topic-ok listáját - SERVER ACTION
+    const tokenRes = await getMyTokenInfoAction()
+    const initialToken = tokenRes.ok ? tokenRes.token : null
 
+    const topicsArray = Array.isArray(topics) ? topics : []
+    const subTopicsArray = Array.isArray(subTopics) ? subTopics : []
+    const chunksArray = Array.isArray(chunks) ? chunks : []
 
-    // ha nincs topic, akkor üzenet megjelenítése - KOMPONENS
-
-    const render = false
-
-    if (render) {
+    // ezt kiszervezni komponensbe
+    if (topicsArray.length < 1) {
         return (
-            <Card className="rounded-2xl">
+            <Card >
                 <CardHeader>
                     <CardTitle className="text-base">Nincs témakör</CardTitle>
                     <CardDescription>
@@ -30,16 +32,17 @@ const RagChatPage = async () => {
         )
     }
 
-    // lekérjök az alcímeket - opcionálisan ezekből tud választania  felhasználó - SERVER ACTION
+    return (
+        <div className="w-full min-h-[calc(100vh-68px)]">
+            <RagChatPanel
+                topics={topicsArray}
+                subTopics={subTopicsArray}
+                chunks={chunksArray}
+                initialToken={initialToken}
+            />
+        </div>
+    )
 
-
-    // chat pane megjelenítése - KOMPONENS
-
-    if (!render) {
-        return (
-            <RagChatPanel topics={topics} />
-        )
-    }
 
 
 

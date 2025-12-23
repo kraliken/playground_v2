@@ -4,6 +4,7 @@ TOPIC*.txt
 VECTOR*.JSON
 PROMPT*.md
 GUIDE.md
+PLANNING.md
 
 # dependencies
 /node_modules

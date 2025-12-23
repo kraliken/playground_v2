@@ -2,11 +2,17 @@ import { Field, FieldLabel } from "../ui/field"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 
 
-const ChunkSelector = ({ chunks, selectedTopicId, selectedChunkId, setSelectedChunkId, hasTopics, pending }) => {
+const ChunkSelector = ({
+    chunks,
+    selectedChunkId,
+    setSelectedChunkId,
+    hasChunks,
+}) => {
+
     return (
         <Field>
-            <FieldLabel htmlFor="chunk">Alcím (opcionális)</FieldLabel>
-            <Select value={selectedChunkId} onValueChange={setSelectedChunkId} disabled={!hasTopics || !selectedTopicId || pending}>
+            <FieldLabel htmlFor="chunk">Fejezet (opcionális)</FieldLabel>
+            <Select value={selectedChunkId} onValueChange={setSelectedChunkId} disabled={!hasChunks}>
                 <SelectTrigger>
                     <SelectValue placeholder="Válassz alcímet..." />
                 </SelectTrigger>

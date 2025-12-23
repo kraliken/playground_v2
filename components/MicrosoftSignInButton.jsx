@@ -8,7 +8,7 @@ const MicrosoftSignInButton = () => {
     return (
         <Button
             onClick={() => SignInAction("microsoft-entra-id")}
-            className="h-12 gap-2 text-base font-medium shadow-sm"
+            className=""
         >
             <TfiMicrosoftAlt className="h-5 w-5 shrink-0 text-muted-foreground" />
             Belépés Microsoft Entra ID-val

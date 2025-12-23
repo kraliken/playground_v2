@@ -1,4 +1,5 @@
 import { auth } from '@/auth'
+import ClientOnly from '@/components/ClientOnly'
 import AppSidebar from '@/components/navigation/AppSidebar'
 import Navbar from '@/components/navigation/Navbar'
 import { SidebarProvider } from '@/components/ui/sidebar'
@@ -21,7 +22,7 @@ const DashboardLayout = async ({ children }) => {
                     {children}
                 </main>
             </div>
-            <Toaster />
+
         </SidebarProvider>
     )
 }

@@ -1,11 +1,11 @@
-import TopicCreateFormCard from '@/components/topic/TopicCreateFormCard';
-import TopicList from '@/components/topic/TopicList';
-import TxtUploadFormCard from '@/components/topic/TxtUploadFormCard';
-import { getTopicListAction } from '@/lib/actions/topics'
+import { getAllTopicAction } from '@/action/topic';
+import UploadContentCard from '@/components/form/content/UploadContentCard';
+import CreateTopicCard from '@/components/form/topics/CreateTopicCard';
+import TopicList from '@/components/list/topics/TopicList';
 
 const RagTopicsPage = async () => {
 
-    const { topics } = await getTopicListAction()
+    const { data } = await getAllTopicAction()
 
     return (
         <div className='flex flex-col gap-4'>
@@ -15,18 +15,18 @@ const RagTopicsPage = async () => {
 
                 {/* form a témakör létrehozására */}
                 <div className='flex-1'>
-                    <TopicCreateFormCard />
+                    <CreateTopicCard />
                 </div>
 
                 {/* form a tartalom feltöltésére létrehozására */}
                 <div className='flex-1'>
-                    <TxtUploadFormCard topics={topics} />
+                    <UploadContentCard topics={data} />
                 </div>
 
             </div>
 
             {/* témakör lista megjelenítése */}
-            <TopicList topics={topics} />
+            <TopicList topics={data} />
         </div>
     )
 }

@@ -1,13 +1,22 @@
-"use client"
+
 
 import Link from "next/link"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarSeparator } from "../ui/sidebar"
-import { ChevronUp, Code, LogOut, User2 } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { ragAppLinks } from "@/lib/constans";
-import { SignOutAction } from "@/lib/actions/auth";
+import { Code } from "lucide-react"
+import { ragAppLinks, setupLinks, } from "@/lib/constans";
+import UserSetupDropdownMenu from "./UserSetupDropdownMenu";
+
 
 const AppSidebar = ({ session }) => {
+
+    const role = session?.user?.role || "user";
+
+    const filteredRagAppLinks = ragAppLinks.filter((item) =>
+        item.roles?.includes(role)
+    );
+    const filteredLinks = setupLinks.filter((item) =>
+        item.roles?.includes(role)
+    );
 
     return (
         <Sidebar collapsible="icon">
@@ -34,7 +43,7 @@ const AppSidebar = ({ session }) => {
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {ragAppLinks.map(task => (
+                            {filteredRagAppLinks.map(task => (
                                 <SidebarMenuItem key={task.label}>
                                     <SidebarMenuButton asChild>
                                         <Link href={task.href}>
@@ -49,25 +58,51 @@ const AppSidebar = ({ session }) => {
                     </SidebarGroupContent>
                 </SidebarGroup>
 
+                {role === 'admin' && <SidebarGroup>
+                    <SidebarGroupLabel>
+                        Admin
+                    </SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {filteredLinks.map(task => (
+                                <SidebarMenuItem key={task.label}>
+                                    <SidebarMenuButton asChild>
+                                        <Link href={task.href}>
+                                            {task.icon}
+                                            {task.label}
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>}
+
             </SidebarContent>
 
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton>
-                                    <User2 />{session?.user?.name} <ChevronUp className="ml-auto" />
-                                </SidebarMenuButton>
-                            </DropdownMenuTrigger>
 
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => SignOutAction()}>
-                                    <LogOut />
-                                    Kilépés
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        {/* <ClientOnly fallback={null}> */}
+                        <UserSetupDropdownMenu session={session} />
+                        {/* <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <SidebarMenuButton>
+                                        <User2 />{session?.user?.name} <ChevronUp className="ml-auto" />
+                                    </SidebarMenuButton>
+                                </DropdownMenuTrigger>
+
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onClick={() => SignOutAction()}>
+                                        <LogOut />
+                                        Kilépés
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu> */}
+                        {/* </ClientOnly> */}
+
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarFooter>

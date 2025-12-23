@@ -1,16 +1,16 @@
-import EmbeddingDocumentList from "@/components/embedding/EmbeddingDocumentList";
-import { getMyDocumentsWithTopicAction } from "@/lib/actions/documents";
+import { getAllTopicWithSubTopicsAndChunksAction } from "@/action/topic";
+import EmbeddingManager from "@/components/embedding/EmbeddingManager";
 
 
-const RagDocumentsPage = async () => {
+const RagEmbeddingManagerPage = async () => {
 
-    const res = await getMyDocumentsWithTopicAction();
+    const { data } = await getAllTopicWithSubTopicsAndChunksAction();
 
     return (
         <div className="flex flex-col gap-4">
-            <EmbeddingDocumentList documents={res.documents} />
+            <EmbeddingManager data={data} />
         </div>
     )
 }
 
-export default RagDocumentsPage
+export default RagEmbeddingManagerPage 
