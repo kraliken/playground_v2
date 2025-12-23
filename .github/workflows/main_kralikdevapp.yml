@@ -46,7 +46,7 @@ jobs:
           cp -R node_modules deploy/
           cp -R styles deploy/ || true
           cp package.json deploy/
-          cp next.config.js deploy/ || true
+          cp next.config.mjs deploy/ || true
           cp server.js deploy/
 
       - name: Zip artifact for deployment
