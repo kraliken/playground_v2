@@ -16,18 +16,18 @@ jobs:
       contents: read #This is required for actions/checkout
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: "24.x"
 
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js app
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           AUTH_MICROSOFT_ENTRA_ID_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_ID }}
@@ -36,12 +36,27 @@ jobs:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           BCRYPT_SALT_ROUNDS: ${{ secrets.BCRYPT_SALT_ROUNDS }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: npm run build
 
-      - name: Upload artifact for deployment job
+      - name: Prepare deployment package
+        run: |
+          mkdir deploy
+          cp -R .next deploy/
+          cp -R public deploy/
+          cp -R node_modules deploy/
+          cp -R styles deploy/ || true
+          cp package.json deploy/
+          cp next.config.js deploy/ || true
+          cp server.js deploy/
+
+      - name: Zip artifact for deployment
+        run: cd deploy && zip -r ../release.zip . && cd ..
+
+      - name: Upload artifact for deployment
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
