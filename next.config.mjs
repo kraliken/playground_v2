@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
+const path = require('path')
 const nextConfig = {
-  /* config options here */
+  turbopack: {
+    root: path.join(__dirname, '..'),
+  },
 };
 
 export default nextConfig;
