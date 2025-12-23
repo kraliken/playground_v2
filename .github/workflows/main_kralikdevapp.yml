@@ -40,6 +40,7 @@ jobs:
 
       - name: Prepare deployment package
         run: |
+          rm -rf deploy
           mkdir deploy
           cp -R .next deploy/
           cp -R public deploy/
@@ -50,7 +51,9 @@ jobs:
           cp server.js deploy/
 
       - name: Zip artifact for deployment
-        run: cd deploy && zip -r ../release.zip . && cd ..
+        run: |
+          rm -f release.zip
+          cd deploy && zip -r ../release.zip . && cd ..
 
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v4
@@ -78,10 +81,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_06FFB68331554F60AF62CF992E3CCB4D }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_278B239C41A14652A7DAEB93C42086C4 }}
 
-      - name: "Deploy to Azure Web App"
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: "kralikdevapp"
           slot-name: "Production"
-          package: .
+          package: release.zip
