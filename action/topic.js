@@ -10,19 +10,34 @@ import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
 
 // mappers -- start ------------------------------------------------------------------
+function hasOwn(obj, key) {
+    return Object.prototype.hasOwnProperty.call(obj, key);
+}
+
 function toTopicDto(topic) {
-    if (!topic?._id) {
+    if (!topic || !topic._id) {
         throw new Error("Invalid topic: missing _id");
     }
 
-    return {
+    const dto = {
         id: String(topic._id),
-        title: topic.title ?? "",
-        description: topic.description ?? "",
-        createdAt: topic.createdAt instanceof Date
-            ? topic.createdAt.toISOString()
-            : String(topic.createdAt),
     };
+
+    if (hasOwn(topic, "title")) {
+        dto.title = topic.title ?? "";
+    }
+
+    if (hasOwn(topic, "description")) {
+        dto.description = topic.description ?? "";
+    }
+
+    if (hasOwn(topic, "createdAt")) {
+        const createdAt = topic.createdAt;
+        dto.createdAt =
+            createdAt instanceof Date ? createdAt.toISOString() : String(createdAt);
+    }
+
+    return dto;
 }
 
 function toTopicDtos(topics) {
@@ -32,13 +47,41 @@ function toTopicDtos(topics) {
 
     return topics.map(toTopicDto);
 }
+
+function toSubTopicsWithChunksDto(subTopicsRaw, chunksRaw) {
+    const chunksBySubTopicId = new Map();
+
+    for (const c of chunksRaw) {
+        const key = String(c.subTopicId);
+        if (!chunksBySubTopicId.has(key)) chunksBySubTopicId.set(key, []);
+        chunksBySubTopicId.get(key).push({
+            id: String(c._id),
+            subTopicId: String(c.subTopicId),
+            title: c.title ?? "",
+            text: c.text ?? "",
+            // embeddingModel: c.embeddingModel ?? "",
+            createdAt: c.createdAt instanceof Date ? c.createdAt.toISOString() : String(c.createdAt),
+        });
+    }
+
+    return subTopicsRaw.map((s) => ({
+        id: String(s._id),
+        topicId: String(s.topicId),
+        title: s.title ?? "",
+        status: s.status ?? "",
+        // embeddingTotalTokens: s.embeddingTotalTokens ?? 0,
+        createdAt: s.createdAt instanceof Date ? s.createdAt.toISOString() : String(s.createdAt),
+        chunks: chunksBySubTopicId.get(String(s._id)) ?? [],
+    }));
+}
 // mappers -- end -------------------------------------------------------------------
 
+// admin
 export async function getAllTopicAction() {
 
     const session = await auth();
 
-    if (!session || session.user.role !== 'admin') {
+    if (!session.user || session.user.role !== 'admin') {
         return {
             ok: false,
             error: "Nincs jogosultságod.",
@@ -61,6 +104,85 @@ export async function getAllTopicAction() {
     } catch (error) {
         console.error("get topic list action error", error)
         return { ok: false, error: "Server hiba", data: [] }
+    }
+}
+
+// admi + user
+export async function getAllTopicForSelectAction() {
+
+    const session = await auth();
+
+    if (!session.user) {
+        return {
+            ok: false,
+            error: "Nincs jogosultságod.",
+            data: []
+        };
+    }
+
+    try {
+        await connectToDatabase()
+
+        // 1) Kikeressük azokat a topicId-kat, amikhez van EMBEDDED subtopic
+        const topicIds = await SubTopic.distinct("topicId", { status: "EMBEDDED" });
+
+        const topics = await Topic.find({ _id: { $in: topicIds } })
+            .sort({ title: -1 })
+            .select("title")
+            .lean();
+
+        return {
+            ok: true,
+            data: toTopicDtos(topics),
+        }
+    } catch (error) {
+        console.error("get topic list for select action error", error)
+        return { ok: false, error: "Server hiba", data: [] }
+    }
+}
+
+// admin + user
+export async function getEmbeddedSubTopicsAndChunksByTopicAction(topicId) {
+    const session = await auth();
+
+    if (!session?.user) {
+        return { ok: false, error: "Nincs jogosultságod.", data: [] };
+    }
+
+    if (!topicId) {
+        return { ok: false, error: "Hiányzó topicId.", data: [] };
+    }
+
+    try {
+        await connectToDatabase();
+
+        const subTopicsRaw = await SubTopic.find(
+            { topicId, status: "EMBEDDED" },
+            { topicId: 1, title: 1, status: 1, createdAt: 1 }
+        )
+            .sort({ title: -1 })
+            .lean();
+
+        if (!subTopicsRaw.length) {
+            return { ok: true, data: [] };
+        }
+
+        const subTopicIds = subTopicsRaw.map((s) => s._id);
+
+        const chunksRaw = await Chunk.find(
+            { subTopicId: { $in: subTopicIds } },
+            { subTopicId: 1, title: 1, text: 1, createdAt: 1 }
+        )
+            .sort({ createdAt: -1 })
+            .lean();
+
+        return {
+            ok: true,
+            data: toSubTopicsWithChunksDto(subTopicsRaw, chunksRaw),
+        };
+    } catch (error) {
+        console.error("getEmbeddedSubTopicsAndChunksByTopicAction error", error);
+        return { ok: false, error: "Server hiba", data: [] };
     }
 }
 

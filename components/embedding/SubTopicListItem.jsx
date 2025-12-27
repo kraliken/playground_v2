@@ -1,18 +1,25 @@
 import { Item, ItemActions, ItemContent, ItemTitle } from '../ui/item'
 import { Badge } from '../ui/badge'
-import { CheckCircle2, CircleAlert, Sparkles } from 'lucide-react'
+import { CheckCircle2, CircleAlert, Loader2, Sparkles } from 'lucide-react'
 import { Button } from '../ui/button';
 
 const formatTokens = (n) =>
     (Number(n) || 0).toLocaleString('hu-HU');
 
-const SubTopicListItem = ({ subTopic, onEmbedSubTopic, embeddingSubTopicId }) => {
+const SubTopicListItem = ({ subTopic, onEmbedSubTopic, pending, embeddingSubTopicId }) => {
 
     const canEmbed = !!subTopic.hasNonEmbeddedChunk;
     const isLoading = embeddingSubTopicId === subTopic.id;
 
+    // Ha fut egy beágyazás, ne lehessen “rákattintani” másik sorra is.
+    const isDisabled = pending || !canEmbed;
+
     return (
-        <Item variant="muted" className="flex items-start gap-12">
+        <Item
+            variant="muted"
+            className="flex items-start gap-12"
+            aria-busy={isLoading ? "true" : "false"}
+        >
             <ItemContent>
                 <ItemTitle className="flex items-center gap-2">
                     {subTopic.title}
@@ -70,11 +77,20 @@ const SubTopicListItem = ({ subTopic, onEmbedSubTopic, embeddingSubTopicId }) =>
                 <Button
                     variant={canEmbed ? "default" : "outline"}
                     size="sm"
-                    disabled={!canEmbed || isLoading}
+                    disabled={isDisabled}
                     onClick={() => onEmbedSubTopic(subTopic.id)}
                 >
-                    <Sparkles className="mr-2 size-4" />
-                    {isLoading ? "Folyamatban..." : "Beágyazás"}
+                    {isLoading ? (
+                        <>
+                            <Loader2 className="mr-2 size-4 animate-spin" />
+                            Folyamatban...
+                        </>
+                    ) : (
+                        <>
+                            <Sparkles className="mr-2 size-4" />
+                            Beágyazás
+                        </>
+                    )}
                 </Button>
             </ItemActions>
         </Item>

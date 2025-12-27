@@ -2,6 +2,7 @@
 
 import { useTransition } from "react"
 import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -32,7 +33,7 @@ const DeleteUserDialog = ({ userId, userName, open, onOpenChange }) => {
 
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
-            <AlertDialogContent>
+            <AlertDialogContent aria-busy={isPending}>
                 <AlertDialogTitle>Felhasználó inaktiválása</AlertDialogTitle>
                 <AlertDialogDescription>
                     Biztosan szeretnéd inaktiválni a <strong>{userName}</strong> nevű felhasználót? <br />Ez a művelet nem vonható vissza.
@@ -44,6 +45,7 @@ const DeleteUserDialog = ({ userId, userName, open, onOpenChange }) => {
                         disabled={isPending}
                         className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
+                        {isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
                         {isPending ? "Inaktiválás..." : "Inaktiválás"}
                     </AlertDialogAction>
                 </div>

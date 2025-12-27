@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect } from 'react'
 import { toast } from 'sonner'
+import { Loader2 } from "lucide-react"
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
@@ -21,7 +22,7 @@ const CreateUserForm = () => {
     }, [state])
 
     return (
-        <form action={formAction} className='flex flex-col items-start gap-6'>
+        <form action={formAction} className='flex flex-col items-start gap-6' aria-busy={pending}>
             <Field>
                 <FieldLabel htmlFor="fullname">Teljes név</FieldLabel>
                 <Input
@@ -31,6 +32,7 @@ const CreateUserForm = () => {
                     placeholder="Max Leiter"
                     defaultValue={state.data.fullname ?? ""}
                     aria-invalid={!!state.errors?.fullname}
+                    disabled={pending}
                 />
                 {state.errors?.fullname && (
                     <FieldError>{state.errors.fullname}</FieldError>
@@ -45,6 +47,7 @@ const CreateUserForm = () => {
                     placeholder="name@example.com"
                     defaultValue={state.data.email ?? ""}
                     aria-invalid={!!state.errors?.email}
+                    disabled={pending}
                 />
                 {state.errors?.email && (
                     <FieldError>{state.errors.email}</FieldError>
@@ -58,6 +61,7 @@ const CreateUserForm = () => {
             </Alert>}
 
             <Button type="submit" disabled={pending}>
+                {pending && <Loader2 className="mr-2 size-4 animate-spin" />}
                 {pending ? "Felhasználó regisztrálása..." : "Felhasználó regisztrálása"}
             </Button>
         </form>

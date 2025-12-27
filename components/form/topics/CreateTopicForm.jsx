@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { createTopicAction } from "@/action/topic"
+import { Loader2 } from "lucide-react";
 
 const initialState = { ok: undefined, error: "", errors: {}, data: {} }
 
@@ -21,7 +22,11 @@ const CreateTopicForm = () => {
     }, [state])
 
     return (
-        <form action={formAction} className='h-full flex flex-col items-start gap-6'>
+        <form
+            action={formAction}
+            className='h-full flex flex-col items-start gap-6'
+            aria-busy={pending}
+        >
             <Field>
                 <FieldLabel htmlFor="title">Elnevezés</FieldLabel>
                 <Input
@@ -31,6 +36,7 @@ const CreateTopicForm = () => {
                     placeholder="pl.: Általános Forgalmi Adó"
                     defaultValue={state.data.title ?? ""}
                     aria-invalid={!!state.errors?.title}
+                    disabled={pending}
                 />
                 {state.errors?.title && (
                     <FieldError>{state.errors.title}</FieldError>
@@ -47,6 +53,7 @@ const CreateTopicForm = () => {
                     placeholder="Opcionálisan rövid leírás a témakörről..."
                     defaultValue={state.data.description ?? ""}
                     aria-invalid={!!state.errors?.description}
+                    disabled={pending}
                 />
                 {state.errors?.description && (
                     <FieldError>{state.errors.description}</FieldError>
@@ -54,6 +61,7 @@ const CreateTopicForm = () => {
             </Field>
 
             <Button type="submit" disabled={pending} className="mt-auto">
+                {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {pending ? "Létrehozás..." : "Létrehozás"}
             </Button>
         </form>

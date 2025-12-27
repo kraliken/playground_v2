@@ -14,6 +14,7 @@ function Pill({ children }) {
 }
 
 export default function RagOverviewPage() {
+
     return (
         <main className="mx-auto w-full max-w-6xl p-6">
             {/* Header */}
@@ -60,69 +61,71 @@ export default function RagOverviewPage() {
                 </Card>
 
                 {/* Jobb oldali két kártya mehet fél-félben alatta */}
-                <div className="flex flex-col gap-6">
-                    <Alert>
-                        <AlertTitle>Milyen LLM-korlátokat kezel a RAG?</AlertTitle>
-                        <AlertDescription className="mt-2">
-                            <ul className="list-disc space-y-1 pl-5">
-                                <li>
-                                    <span className="font-medium text-foreground">Elavult tudás</span>: az LLM-ek egy adott időpontig betanított,
-                                    statikus adathalmazon tanulnak.
-                                </li>
-                                <li>
-                                    <span className="font-medium text-foreground">Nincs hozzáférés saját adatokhoz</span>: lokális, személyre szabott,
-                                    vagy szűk domain adatok tipikusan nincsenek “benne” a modellben.
-                                </li>
-                                <li>
-                                    <span className="font-medium text-foreground">Hallucináció</span>: hiányos vagy elavult kontextus mellett a modell
-                                    pontatlan választ generálhat.
-                                </li>
-                            </ul>
-                        </AlertDescription>
-                    </Alert>
+                <div className="lg:col-span-2 flex items-stretch gap-6">
+                    <div className="flex-1 flex flex-col gap-6 h-full">
+                        <Alert className="h-full flex flex-col gap-6 p-6">
+                            <AlertTitle>Milyen LLM-korlátokat kezel a RAG?</AlertTitle>
+                            <AlertDescription>
+                                <ul className="list-disc space-y-1 pl-5">
+                                    <li>
+                                        <span className="font-medium text-foreground">Elavult tudás</span>: az LLM-ek egy adott időpontig betanított,
+                                        statikus adathalmazon tanulnak.
+                                    </li>
+                                    <li>
+                                        <span className="font-medium text-foreground">Nincs hozzáférés saját adatokhoz</span>: lokális, személyre szabott,
+                                        vagy szűk domain adatok tipikusan nincsenek “benne” a modellben.
+                                    </li>
+                                    <li>
+                                        <span className="font-medium text-foreground">Hallucináció</span>: hiányos vagy elavult kontextus mellett a modell
+                                        pontatlan választ generálhat.
+                                    </li>
+                                </ul>
+                            </AlertDescription>
+                        </Alert>
+                    </div>
+                    <div className="flex-1 flex flex-col gap-6 h-full">
+                        <Card className="h-full">
+                            <CardHeader>
+                                <CardTitle>Mi történik egy kérdésnél?</CardTitle>
+                                <CardDescription>„Kérdés → keresés → kontextus → válasz”</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ol className="space-y-3 text-sm">
+                                    <li className="flex gap-3">
+                                        <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs">1</span>
+                                        <div>
+                                            <div className="font-medium">A kérdésből embedding készül</div>
+                                            <div className="text-muted-foreground">
+                                                A rendszer a felhasználói kérdést vektoros reprezentációvá (embeddinggé) alakítja.
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li className="flex gap-3">
+                                        <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs">2</span>
+                                        <div>
+                                            <div className="font-medium">Vector Search a MongoDB-ben</div>
+                                            <div className="text-muted-foreground">
+                                                A kérdés embeddingje alapján a Vector Search szemantikailag hasonló dokumentumokat keres az indexelt embeddingek között.
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li className="flex gap-3">
+                                        <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs">3</span>
+                                        <div>
+                                            <div className="font-medium">LLM válasz a kontextus felhasználásával</div>
+                                            <div className="text-muted-foreground">
+                                                A prompt a kérdést és a visszakeresett dokumentumokat együtt adja az LLM-nek, amely ezekből generál választ.
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </div>
 
-                <div className="flex flex-col gap-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Mi történik egy kérdésnél?</CardTitle>
-                            <CardDescription>„Kérdés → keresés → kontextus → válasz”</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <ol className="space-y-3 text-sm">
-                                <li className="flex gap-3">
-                                    <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs">1</span>
-                                    <div>
-                                        <div className="font-medium">A kérdésből embedding készül</div>
-                                        <div className="text-muted-foreground">
-                                            A rendszer a felhasználói kérdést vektoros reprezentációvá (embeddinggé) alakítja.
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li className="flex gap-3">
-                                    <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs">2</span>
-                                    <div>
-                                        <div className="font-medium">Vector Search a MongoDB-ben</div>
-                                        <div className="text-muted-foreground">
-                                            A kérdés embeddingje alapján a Vector Search szemantikailag hasonló dokumentumokat keres az indexelt embeddingek között.
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li className="flex gap-3">
-                                    <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs">3</span>
-                                    <div>
-                                        <div className="font-medium">LLM válasz a kontextus felhasználásával</div>
-                                        <div className="text-muted-foreground">
-                                            A prompt a kérdést és a visszakeresett dokumentumokat együtt adja az LLM-nek, amely ezekből generál választ.
-                                        </div>
-                                    </div>
-                                </li>
-                            </ol>
-                        </CardContent>
-                    </Card>
-                </div>
             </div>
 
 

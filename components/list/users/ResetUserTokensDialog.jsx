@@ -2,6 +2,7 @@
 
 import { useTransition } from "react"
 import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -30,7 +31,7 @@ const ResetUserTokensDialog = ({ userId, userName, open, onOpenChange }) => {
 
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
-            <AlertDialogContent>
+            <AlertDialogContent aria-busy={isPending}>
                 <AlertDialogTitle>Tokenek nullázása</AlertDialogTitle>
                 <AlertDialogDescription>
                     Biztosan nullázod a <strong>{userName}</strong> felhasználó elhasznált tokenjeit? <br />
@@ -40,6 +41,7 @@ const ResetUserTokensDialog = ({ userId, userName, open, onOpenChange }) => {
                 <div className="flex gap-3 justify-end">
                     <AlertDialogCancel disabled={isPending}>Mégsem</AlertDialogCancel>
                     <AlertDialogAction onClick={handleReset} disabled={isPending}>
+                        {isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
                         {isPending ? "Nullázás..." : "Nullázás"}
                     </AlertDialogAction>
                 </div>

@@ -16,12 +16,15 @@ const SignInForm = () => {
 
     useEffect(() => {
         if (state.ok === undefined) return
-        // if (state.ok) toast.success(state.message)
         if (!state.ok && state.error) toast.error(state.error)
     }, [state])
 
     return (
-        <form action={formAction} className='flex flex-col gap-4'>
+        <form
+            action={formAction}
+            className='flex flex-col gap-4'
+            aria-busy={pending}
+        >
             <Field>
                 <FieldLabel htmlFor="email">E-mail</FieldLabel>
                 <Input
@@ -31,6 +34,7 @@ const SignInForm = () => {
                     placeholder="name@example.com"
                     defaultValue={state.data.email ?? ""}
                     aria-invalid={!!state.errors?.email}
+                    disabled={pending}
                 />
                 {state.errors?.email && (
                     <FieldError>{state.errors.email}</FieldError>
@@ -45,6 +49,7 @@ const SignInForm = () => {
                     placeholder=""
                     defaultValue={state.data.password ?? ""}
                     aria-invalid={!!state.errors?.password}
+                    disabled={pending}
                 />
                 {state.errors?.password && (
                     <FieldError>{state.errors.password}</FieldError>

@@ -1,17 +1,14 @@
-import React from 'react'
+import { getAllTopicForSelectAction } from "@/action/topic";
+import ContentContainer from "@/components/contents/ContentContainer";
+
 
 const RagContentsPage = async () => {
 
+    const { data } = await getAllTopicForSelectAction()
 
     return (
-        <div className="mx-auto w-full max-w-5xl p-6">
-            <div className="mb-6">
-                <h1 className="text-2xl font-semibold">RAG tartalom</h1>
-                <p className="text-sm text-muted-foreground">
-                    Témakör → dokumentum → fejezet → alfejezet
-                </p>
-            </div>
-
+        <div className="flex flex-col gap-4">
+            <ContentContainer topics={data} />
         </div>
     )
 }

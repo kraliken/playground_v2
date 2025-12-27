@@ -11,7 +11,7 @@ const TopicSelector = ({
     return (
         <Field>
             <FieldLabel htmlFor="topic">Témakör</FieldLabel>
-            <Select value={selectedTopicId} onValueChange={setSelectedTopicId} disabled={!hasTopics}>
+            <Select value={selectedTopicId} onValueChange={setSelectedTopicId} disabled={!hasTopics()}>
                 <SelectTrigger>
                     <SelectValue placeholder="Válassz témakört..." />
                 </SelectTrigger>

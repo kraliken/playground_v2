@@ -9,8 +9,6 @@ import { createEmbeddingAction } from '@/action/embedding';
 
 const EmbeddingTopicTree = ({ topic }) => {
 
-    console.log(topic);
-
     const subTopics = topic?.subTopics ?? [];
 
     const [pending, startTransition] = useTransition();
@@ -19,10 +17,16 @@ const EmbeddingTopicTree = ({ topic }) => {
     const runEmbedding = (subTopicId) => {
         setEmbeddingSubTopicId(subTopicId)
         startTransition(async () => {
-            const res = await createEmbeddingAction(subTopicId);
-            setEmbeddingSubTopicId("")
-            if (res?.ok) toast.success(res.message);
-            if (!res?.ok) toast.error(res.error);
+            try {
+                const res = await createEmbeddingAction(subTopicId);
+
+                if (res?.ok) toast.success(res.message);
+                if (!res?.ok) toast.error(res.error);
+            } catch (e) {
+                toast.error("Hiba történt a beágyazás közben.");
+            } finally {
+                setEmbeddingSubTopicId("");
+            }
         })
     }
     return (
