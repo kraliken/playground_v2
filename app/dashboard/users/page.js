@@ -12,6 +12,7 @@ const UsersPage = async () => {
     //     await sleep(2000) // 0.8s, hogy lásd a skeleton-t
     // }
 
+
     const session = await auth()
 
     return (

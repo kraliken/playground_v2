@@ -126,6 +126,7 @@ export async function createEmbeddingAction(subTopicId) {
             { _id: subTopicId },
             { $set: { status: "FAILED" } }
         );
+        revalidatePath("/dashboard/rag/docs");
         return { ok: false, error: "Nem sikerült elindítani az embeddinget.", statusCode: 500 };
 
     }

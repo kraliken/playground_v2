@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarSeparator } from "../ui/sidebar"
 import { Code } from "lucide-react"
-import { ragAppLinks, setupLinks, } from "@/lib/constans";
+import { docIntLinks, ragAppLinks, setupLinks, } from "@/lib/constans";
 import UserSetupDropdownMenu from "./UserSetupDropdownMenu";
 
 
@@ -44,6 +44,27 @@ const AppSidebar = ({ session }) => {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {filteredRagAppLinks.map(task => (
+                                <SidebarMenuItem key={task.label}>
+                                    <SidebarMenuButton asChild>
+                                        <Link href={task.href}>
+                                            {task.icon}
+                                            {task.label}
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+
+                <SidebarGroup>
+                    <SidebarGroupLabel>
+                        Document Intelligence
+                    </SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {docIntLinks.map(task => (
                                 <SidebarMenuItem key={task.label}>
                                     <SidebarMenuButton asChild>
                                         <Link href={task.href}>
