@@ -58,7 +58,7 @@ const AppSidebar = ({ session }) => {
                     </SidebarGroupContent>
                 </SidebarGroup>
 
-                <SidebarGroup>
+                {/* <SidebarGroup>
                     <SidebarGroupLabel>
                         Document Intelligence
                     </SidebarGroupLabel>
@@ -77,7 +77,7 @@ const AppSidebar = ({ session }) => {
 
                         </SidebarMenu>
                     </SidebarGroupContent>
-                </SidebarGroup>
+                </SidebarGroup> */}
 
                 {role === 'admin' && <SidebarGroup>
                     <SidebarGroupLabel>
