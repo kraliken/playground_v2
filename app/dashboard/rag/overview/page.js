@@ -19,11 +19,11 @@ export default function RagOverviewPage() {
         <main className="mx-auto w-full max-w-6xl p-6">
             {/* Header */}
             <div className="flex flex-col gap-3">
-                <div className="flex flex-wrap items-center gap-2">
+                {/* <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="secondary">Retrieval-Augmented Generation</Badge>
                     <Pill>MongoDB Atlas Vector Search</Pill>
                     <Pill>Basic / “naive” RAG architektúra</Pill>
-                </div>
+                </div> */}
 
                 <h1 className="text-2xl font-semibold tracking-tight">Áttekintés: RAG architektúra MongoDB-vel</h1>
                 <p className="text-sm text-muted-foreground">
